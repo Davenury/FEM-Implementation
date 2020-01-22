@@ -71,7 +71,7 @@ def getL(n):
     return integrate(lambda x: f(x)*en(x))[0]-gamma*en(0)
 
 
-def B(i: int, j: int) -> float:
+def getB(i: int, j: int) -> float:
     e1 = diffEFun(i)
     e2 = diffEFun(j)
     e1Diff = diffEFun(i)
@@ -91,7 +91,7 @@ def BForMatrix(i, j):
         if j == N:
             return 1
         return 0
-    return B(i, j)
+    return getB(i, j)
 
 
 def makeABMatrix():
