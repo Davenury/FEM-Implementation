@@ -2,13 +2,17 @@ from main.RRIR import solveForU
 from main.RRIR import N
 import matplotlib.pyplot as plt
 import numpy as np
+import math
 
-res = solveForU()
-for x in np.arange(0, 1.1, 1/N):
+#res = solveForU()
+def res(x):
+    return math.sin(2*x-math.pi)
+for x in np.arange(-2*math.pi, -2*math.pi, math.pi/100):
     print("x: ", round(x, 2), "\t u(x) = ", round(res(x), 4))
 
 
-t1 = np.arange(0.0, 1.0, 1.0/N)
+
+t1 = np.arange(-2*math.pi, 2*math.pi, math.pi/100)
 t2 = [round(res(x), 3) for x in t1]
 
 with plt.style.context('Solarize_Light2'):

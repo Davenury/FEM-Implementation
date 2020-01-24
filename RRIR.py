@@ -3,30 +3,30 @@ import numpy
 import scipy.integrate as scipy
 
 N = 10
-uR = 1
+uR = -1
 Omega = [0, 1]
-beta = 0
-gamma = 1
+beta = 1
+gamma = 2
 
 
 def a(x):
-    return 0
+    return 2
 
 
 def b(x):
-    return 0
+    return -3
 
 
 def c(x):
     return 1
 
 
-def f(x):
-    return x
+def function(x):
+    return x**2
 
 
 def solveLinArr(A, B):   #rozwiązujemy układ liniowy B*U = L, chcemy U
-    return(numpy.linalg.solve(A,B))
+    return numpy.linalg.solve(A, B)
 
 
 def integrate(f):   #całkujemy!
@@ -42,7 +42,18 @@ def eFun(i):
 
 
 def e(x, n):
-    return max(0, 1-abs(x-takeX(n))*N)
+    if n > 0:
+        if x < takeX(n - 1) or x > takeX(n + 1):
+            return 0
+        if x < takeX(n):
+            return N * (x - takeX(n - 1))
+        else:
+            return N * (takeX(n + 1) - x)
+    elif n == 0:
+        if x > takeX(n + 1):
+            return 0
+        else:
+            return N * (takeX(n + 1) - x)
 
 
 def diffEFun(n: int):
@@ -57,23 +68,26 @@ def diffE(x, n):
             return N
         else:
             return -N
-    else:
-        if x < takeX(1):
-            return -N
-        else:
+    elif n==0:
+        if x > takeX(n+1):
             return 0
+        else:
+            return -N
 
 
 def getL(n):
     if n == N:
         return uR
+
     en = eFun(n)
-    return integrate(lambda x: f(x)*en(x))[0]-gamma*en(0)
+    component1 = integrate(lambda x: function(x)*en(x))[0]
+    component2 = -gamma*en(0)
+    return component1 + component2
 
 
 def getB(i: int, j: int) -> float:
-    e1 = diffEFun(i)
-    e2 = diffEFun(j)
+    e1 = eFun(i)
+    e2 = eFun(j)
     e1Diff = diffEFun(i)
     e2Diff = diffEFun(j)
 
@@ -91,7 +105,7 @@ def BForMatrix(i, j):
         if j == N:
             return 1
         return 0
-    return getB(i, j)
+    return getB(j, i)
 
 
 def makeABMatrix():
@@ -108,6 +122,8 @@ def makeALMatrix():
         LMatrix[i] = getL(i)
     return LMatrix
 
+print(makeABMatrix())
+print(makeALMatrix())
 
 def solveForU():
     uFactors = solveLinArr(makeABMatrix(), makeALMatrix())
